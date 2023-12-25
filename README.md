@@ -1,9 +1,9 @@
 # python_channel
+add to pubspec.yaml
 ```yaml
 dependencies:
-  ffi: ^2.1.0
-  flutter:
-    sdk: flutter
-  plugin_platform_interface: ^2.0.2
+  python_channel:
+    git:
+      url: https://github.com/NguyenVanDuongTDH/python_channel.git
 ```
  
