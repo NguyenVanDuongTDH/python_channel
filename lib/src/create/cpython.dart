@@ -23,7 +23,6 @@ class PyThon {
   
   static Future<void> initialize(
       String shareLib, {String? pythonHome, List<String> pythonPath = const []}) async {
-    WidgetsFlutterBinding.ensureInitialized();
     if(pythonHome != null) {
       await PythonChannelPlatform.instance.setenv("PYTHONHOME", pythonHome);
       await PythonChannelPlatform.instance.setenv("PYTHONPATH", "$pythonHome\\Lib\\site-packages");
