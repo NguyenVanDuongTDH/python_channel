@@ -46,7 +46,7 @@ defaultConfig {
         //
         //
         ndk {
-        abiFilters "arm64-v8a"
+         abiFilters "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
         }
         python {
                 // buildPython "C:/Users/Ahmed/AppData/Local/Programs/Python/Python311/python.exe"
@@ -55,6 +55,9 @@ defaultConfig {
                     install "numpy"
                 }
             }
+        defaultConfig {
+        version = "3.8"
+        }
         sourceSets {
              main {
                  python.srcDir "src/main/python"
