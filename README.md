@@ -41,6 +41,10 @@ android {
 //
 //
 //
+defaultConfig {
+        //
+        //
+        //
         ndk {
         abiFilters "arm64-v8a"
         }
@@ -56,8 +60,10 @@ android {
                  python.srcDir "src/main/python"
              }
         }
+}
 //
 //
 //
+}
 ```
  
