@@ -40,11 +40,11 @@ class PyObjectType {
     }
   }
 
-  factory PyObjectType.fromDart(dynamic item) {
-    dynamic obj;
+  // factory PyObjectType.fromDart(dynamic item) {
+  //   dynamic obj;
 
-    return PyObjectType(reference: obj);
-  }
+  //   return PyObjectType(reference: obj);
+  // }
 
   void inc_ref() {
     PyThon.cpython.Py_IncRef(reference);

@@ -1,11 +1,12 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:python_channel/python_channel.dart';
 
 Future<void> main() async {
-  await PythonChannel.initialize("python311.dll",
-      pythonHome:
-          "C:\\Users\\Admin\\AppData\\Local\\Programs\\Python\\Python311");
+  WidgetsFlutterBinding.ensureInitialized();
+  await PythonChannel.initialize("python311.dll");
   runApp(const MyApp());
 }
 
@@ -18,11 +19,13 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   late PyModule module;
+  late PyDict dict;
   String text = "12 + 45";
   @override
   void initState() {
     super.initState();
     module = PyModule.open("main");
+    dict = PyDict.fromMap({});
   }
 
   @override
@@ -35,6 +38,17 @@ class _MyAppState extends State<MyApp> {
           children: [
             ElevatedButton(
                 onPressed: () {
+                  final key = "Hello world".toPyString();
+                  dict[key] = "hello";
+
+                  // print(key.reference.ref.ob_refcnt);
+                  // // dict.remove(key);
+                  // print(key.reference.ref.ob_refcnt);
+                  // print(dict.keys());
+                  // print(key.reference.ref.ob_refcnt);
+
+
+
                   setState(() {
                     text = module
                         .attr("test")

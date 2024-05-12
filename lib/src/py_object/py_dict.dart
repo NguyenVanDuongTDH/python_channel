@@ -1,5 +1,7 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
 
+import 'package:python_channel/python_channel.dart';
+
 import '../pythonConfig.dart';
 
 class PyDict extends PyObjectType {
@@ -21,18 +23,46 @@ class PyDict extends PyObjectType {
     return PyDict._(reference: dict);
   }
 
-  PyObjectType operator [](String key) {
-    final _key = key.toCString();
-    final res = PyThon.cpython.PyDict_GetItemString(reference, _key.cast());
-    _key.free();
+  PyObjectType operator [](dynamic key) {
+    PyObjectType _key;
+    key is PyObjectType ? _key = key : _key = PyObjectType.formDart(key);
+    final check =
+        PyThon.cpython.PyDict_Contains(reference, _key.reference.cast());
+    if (check == 0) {
+      return PyThon.cpython.Py_NoneStruct.toPyObjectType();
+    }
+    final res = PyThon.cpython.PyDict_GetItem(reference, _key.reference.cast());
+    if (key is! PyObjectType) {
+      _key.dec_ref();
+    }
+
     return PyObjectType(reference: res);
   }
 
-  void operator []=(String key, dynamic value) {
-    CString cKey = key.toCString();
-    PyThon.cpython.PyDict_SetItemString(
-        reference, cKey.cast(), PyObjectType.formDart(value).reference);
-    cKey.free();
+  operator []=(dynamic key, dynamic value) {
+    PyObjectType _key;
+    key is PyObjectType ? _key = key : _key = PyObjectType.formDart(key);
+    final res = PyThon.cpython.PyDict_SetItem(reference, _key.reference.cast(),
+        PyObjectType.formDart(value).reference);
+    if (key is! PyObjectType) {
+      _key.dec_ref();
+    }
+  }
+
+  PyList keys() {
+    final res = PyThon.cpython.PyDict_Keys(reference);
+    return PyList.fromRef(res);
+  }
+
+  bool contains(dynamic key) {
+    PyObjectType _key;
+    key is PyObjectType ? _key = key : _key = PyObjectType.formDart(key);
+    final res =
+        PyThon.cpython.PyDict_Contains(reference, _key.reference.cast());
+    if (key is! PyObjectType) {
+      _key.dec_ref();
+    }
+    return res == 1;
   }
 
   void exec(String code) {
@@ -47,10 +77,13 @@ class PyDict extends PyObjectType {
     PyThon.cpython.PyDict_Clear(reference);
   }
 
-  int remove(String key) {
-    final _key = CString.fromString(key);
-    int res = PyThon.cpython.PyDict_DelItemString(reference, _key.cast());
-    _key.free();
+  int remove(dynamic key) {
+    PyObjectType _key;
+    key is PyObjectType ? _key = key : _key = PyObjectType.formDart(key);
+    int res = PyThon.cpython.PyDict_DelItem(reference, _key.reference.cast());
+    if (key is! PyObjectType) {
+      _key.dec_ref();
+    }
     return res;
   }
 
@@ -68,22 +101,16 @@ class PyDict extends PyObjectType {
       final pyKey = key.value.toPyObjectType();
       final pValue = value.value.toPyObjectType();
       map[pyKey.cast<String>()] = pValue.asDart();
-
-      // PyThon.cpython.Py_DecRef(pyKey.reference);
-      // PyThon.cpython.Py_DecRef(pValue.reference);
     }
     calloc.free(key);
     calloc.free(value);
-
     return map;
   }
 
   static bool check(Pointer<PyObject> ref) {
-    return PyThon.cpython.PyObject_IsInstance(ref, PyThon.cpython.PyDict_Type_.cast()) == 1;
-  }
-
-  bool contains(String key) {
-    return PyThon.cpython.PyDict_Contains(reference, key.toPyString().reference) == 1;
+    return PyThon.cpython
+            .PyObject_IsInstance(ref, PyThon.cpython.PyDict_Type_.cast()) ==
+        1;
   }
 }
 

@@ -8,15 +8,20 @@ class PyInt extends PyObjectType {
   }
 
   factory PyInt.fromDart(int value) {
-    return PyInt._(reference: PyThon.cpython.PyLong_FromLong(value));
+    return PyInt._(reference: PyThon.cpython.PyLong_FromLongLong(value));
+    // return PyInt._(reference: PyThon.cpython.PyLong_FromLong(value));
   }
 
   @override
   int asDart() {
-    return PyThon.cpython.PyLong_AsLong(reference);
+    return PyThon.cpython.PyLong_AsLongLong(reference);
+    // return PyThon.cpython.PyLong_AsLong(reference);
   }
-  static bool check(Pointer<PyObject> ref){
-    return PyThon.cpython.PyObject_IsInstance(ref, PyThon.cpython.PyLong_Type_.cast()) == 1;
+
+  static bool check(Pointer<PyObject> ref) {
+    return PyThon.cpython
+            .PyObject_IsInstance(ref, PyThon.cpython.PyLong_Type_.cast()) ==
+        1;
   }
 }
 
