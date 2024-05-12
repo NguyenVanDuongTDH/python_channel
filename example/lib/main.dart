@@ -41,14 +41,6 @@ class _MyAppState extends State<MyApp> {
                   final key = "Hello world".toPyString();
                   dict[key] = "hello";
 
-                  // print(key.reference.ref.ob_refcnt);
-                  // // dict.remove(key);
-                  // print(key.reference.ref.ob_refcnt);
-                  // print(dict.keys());
-                  // print(key.reference.ref.ob_refcnt);
-
-
-
                   setState(() {
                     text = module
                         .attr("test")

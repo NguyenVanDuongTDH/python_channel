@@ -13,21 +13,22 @@ import '../pythonConfig.dart';
 class PyThon {
   static CPython? _cpython;
   static CPython get cpython => _cpython!;
-  static const List<String> _pythonPathWindows = [];
 
-  static String getExePath() {
+  static String getAppPath() {
     final appDirectory = Directory(Platform.resolvedExecutable).parent.path;
     return appDirectory;
   }
 
-  
-  static Future<void> initialize(
-      String shareLib, {String? pythonHome, List<String> pythonPath = const []}) async {
-    if(pythonHome != null) {
+  static Future<void> initialize(String shareLib,
+      {String? pythonHome, List<String>? pythonPath}) async {
+    if (pythonHome != null) {
       await PythonChannelPlatform.instance.setenv("PYTHONHOME", pythonHome);
-      await PythonChannelPlatform.instance.setenv("PYTHONPATH", "$pythonHome\\Lib\\site-packages");
     }
-    
+    if (pythonPath != null) {
+      await PythonChannelPlatform.instance
+          .setenv("PYTHONPATH", pythonPath.join(";"));
+    }
+
     _cpython = CPython(ffi.DynamicLibrary.open(shareLib));
     cpython.Py_Initialize();
   }
