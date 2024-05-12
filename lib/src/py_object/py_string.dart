@@ -9,18 +9,24 @@ class PyString extends PyObjectType {
 
   factory PyString.fromDart(String value) {
     final cString = value.toCString();
-    final pyString = PyThon.cpython.PyUnicode_FromString(cString.cast());
+    final pyString = PyThon.cpython
+        .PyUnicode_FromStringAndSize(cString.cast(), value.length);
     cString.free();
     return PyString._(reference: pyString);
   }
 
   @override
   String asDart() {
-    return PyThon.cpython.PyUnicode_AsUTF8(reference).cast<Utf8>().toDartString();
+    return PyThon.cpython
+        .PyUnicode_AsUTF8(reference)
+        .cast<Utf8>()
+        .toDartString();
   }
 
   static bool check(Pointer<PyObject> ref) {
-    return PyThon.cpython.PyObject_IsInstance(ref, PyThon.cpython.PyUnicode_Type_.cast()) == 1;
+    return PyThon.cpython
+            .PyObject_IsInstance(ref, PyThon.cpython.PyUnicode_Type_.cast()) ==
+        1;
   }
 }
 

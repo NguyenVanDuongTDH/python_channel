@@ -14,7 +14,7 @@ class PyObjectType {
     return PyObjectType(reference: ref);
   }
 
-  static PyObjectType formDart(dynamic item) {
+  factory PyObjectType.formDart(dynamic item) {
     if (item is String) {
       return item.toPyString();
     } else if (item is int) {
@@ -40,12 +40,6 @@ class PyObjectType {
     }
   }
 
-  // factory PyObjectType.fromDart(dynamic item) {
-  //   dynamic obj;
-
-  //   return PyObjectType(reference: obj);
-  // }
-
   void inc_ref() {
     PyThon.cpython.Py_IncRef(reference);
   }
@@ -66,7 +60,7 @@ class PyObjectType {
   PyObjectType call([List? args]) {
     int oldRef = reference.ref.ob_refcnt;
     final _args = PyTuple.fromDart(args ?? []);
-    final res = PyThon.cpython.PyObject_CallObject(reference, _args.reference);
+    final res = PyThon.cpython.PyObject_CallObject(reference, _args.reference.cast());
     if (oldRef < reference.ref.ob_refcnt) {
       dec_ref();
     }
@@ -130,6 +124,8 @@ class PyObjectType {
         return PyBool.fromRef(reference) as U;
       case PyObjectType:
         return PyObjectType.fromRef(reference) as U;
+      case const (Pointer<PyObject>):
+        return reference as U;
       default:
         return asDart() as U;
     }

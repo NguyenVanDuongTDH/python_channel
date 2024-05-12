@@ -37,10 +37,7 @@ class _MyAppState extends State<MyApp> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ElevatedButton(
-                onPressed: () {
-                  final key = "Hello world".toPyString();
-                  dict[key] = "hello";
-
+                onPressed: () async {
                   setState(() {
                     text = module
                         .attr("test")
