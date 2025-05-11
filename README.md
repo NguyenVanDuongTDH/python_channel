@@ -7,26 +7,23 @@ dependencies:
       url: https://github.com/NguyenVanDuongTDH/python_channel.git
 ```
 
-
-build.gradle:android
+thêm ở đầu file
+android.build.gradle.kts
 ```build.gradle
 buildscript {
-    ext.kotlin_version = '1.7.10'
     repositories {
         google()
         mavenCentral()
-        maven { url "https://chaquo.com/maven" } //add maven chaquopy
+        maven(url = "https://chaquo.com/maven") // ✅ Chaquopy repo
     }
-
     dependencies {
-        classpath "com.chaquo.python:gradle:12.0.0" //add chaquopy
-        classpath 'com.android.tools.build:gradle:7.2.0'//add chaquopy
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath("com.android.tools.build:gradle:8.2.0") // hoặc 8.7.0 nếu bạn đã dùng
+        classpath("com.chaquo.python:gradle:12.0.0")      // ✅ Chaquopy plugin
     }
 }
 ```
 
-build.gradle:app
+build.gradle.kts
 ```build.gradle
 plugins {
     id "com.android.application"
